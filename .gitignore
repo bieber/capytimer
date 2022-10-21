@@ -2,6 +2,5 @@
 .\#*
 *.FCStd?
 *.FCStd??
-firmware
 fp-info-cache
 *-backups

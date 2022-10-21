@@ -26,7 +26,7 @@
 int main(void) {
 	DDRA = 0b00000011;
 
-	uint8_t buf[24];
+	uint8_t buf[63];
 	for (int i = 0; i < sizeof(buf); i++) {
 		buf[i] = 0;
 	}
