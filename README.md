@@ -16,3 +16,4 @@ layout is:
 
 * `3d/` - Files for 3D printing
 * `firmware/` - Code to run the AVR microcontroller
+* `pcb/` - KiCad PCB designs
