@@ -1,5 +1,9 @@
-firmware: main.c write_pixels.S write_pixels.h
-	avr-gcc -Os -mmcu=attiny44 write_pixels.S main.c -o firmware
+C_SOURCES :=$(wildcard *.c)
+ASM_SOURCES :=$(wildcard *.S)
+HEADERS :=$(wildcard *.h)
+
+firmware: $(C_SOURCES) $(ASM_SOURCES) $(HEADERS)
+	avr-gcc -Os -mmcu=attiny44 $(C_SOURCES) $(ASM_SOURCES) -o firmware
 
 firmware.hex: firmware
 	avr-objcopy -j .text -j .data -O ihex firmware firmware.hex

@@ -21,6 +21,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+#include "digits.h"
 #include "write_pixels.h"
 
 int main(void) {
@@ -31,18 +32,22 @@ int main(void) {
 		buf[i] = 0;
 	}
 
+	uint8_t digit = 0;
+	uint8_t r = 0;
+	uint8_t g = 0;
+	uint8_t b = 0;
 	while (1) {
 		PORTA = 0b00000001;
-		_delay_ms(100);
-		for (int i = 0; i < sizeof(buf); i++) {
-			buf[i] += i * 5;
-			if (buf[i] == 255) {
-				buf[i] = 0;
-			}
-		}
+		_delay_ms(250);
+		set_digit(buf, digit, r, g, b);
 		write_pixels(buf, sizeof(buf));
 		PORTA = 0b00000000;
-		_delay_ms(100);
+		_delay_ms(250);
+
+		digit = (digit + 1) % 10;
+		r += 25;
+		g += 80;
+		b += 100;
 	}
 
 	return 0;
