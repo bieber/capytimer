@@ -46,17 +46,17 @@ write_pixels:
 	in r20, SREG				; Preserving status register
 	cli							; Disable interrupts for cycle counting
 
-	in r21, PORTA				; PORTA with OUTBIT turned off
+	in r21, PORTB				; PORTB with OUTBIT turned off
 	andi r21, ~(1 << OUTBIT)
 
-	in r22, PORTA				; PORTA with OUTBIT turned on
+	in r22, PORTB				; PORTB with OUTBIT turned on
 	ori r22, (1 << OUTBIT)
 
 	ld r18, X+
 	ldi r19, 8					; 8 bits per byte
 
 begin:
-	out PORTA, r22				; Output high, t=0
+	out PORTB, r22				; Output high, t=0
 
 	lsl r18						; Rotate MSB into C, t=1
 	brcs handle_1				; Branch based on bit
@@ -68,7 +68,7 @@ handle_0:
 	nop							; t=5
 	nop							; t=6
 	nop							; t=7
-	out PORTA, r21				; Output low, t=8
+	out PORTB, r21				; Output low, t=8
 	dec r19						; Decrement bit counter, t=9
 	breq next_byte_0			; If we're out of bits, decrement byte counter
 	;; t=10
@@ -115,7 +115,7 @@ same_byte_1:
 	nop							; t=13
 	nop							; t=14
 	nop							; t=15
-	out PORTA, r21				; Output low, t=16
+	out PORTB, r21				; Output low, t=16
 	breq end					; If we're out of bytes, return, t=17
 	nop							; t=18
 	nop							; t=19
