@@ -1,8 +1,14 @@
 #ifndef DEBOUNCE_H
 #define DEBOUNCE_H
 
-#define MINUTE_THRESHOLD 10
+#include "time.h"
 
-uint16_t debounce_minute(uint16_t existing, uint16_t adc_value);
+#define BUTTON_COUNT 20
+#define SECOND_THRESHOLD 15
+
+struct Time debounce_seconds(struct Time existing, uint16_t adc_value);
+
+uint8_t debounce_start(uint8_t value);
+uint8_t debounce_stop(uint8_t value);
 
 #endif

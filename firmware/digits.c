@@ -33,3 +33,8 @@ void set_digit(uint8_t *buf, uint8_t value, uint8_t r, uint8_t g, uint8_t b) {
 		key <<= 1;
 	}
 }
+
+void set_time(uint8_t *buf, struct Time time, uint8_t r, uint8_t g, uint8_t b) {
+	set_digit(DIGIT_ADDRESS(buf, 0), time.seconds / 10, r, g, b);
+	set_digit(DIGIT_ADDRESS(buf, 1), time.seconds % 10, r, g, b);
+}
