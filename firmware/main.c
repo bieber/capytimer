@@ -18,7 +18,8 @@
 
 #define F_CPU 20000000L
 
-#include<avr/interrupt.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
 #include <avr/io.h>
 
 #include "debounce.h"
@@ -38,7 +39,7 @@ volatile enum State paused_state;
 
 int main(void) {
 	sei();
-	DDRB = 0b00000011;
+	DDRB = 0b00010011;
 	PORTB = 0b00001100;
 
 	uint8_t buf[384];
@@ -139,7 +140,8 @@ int main(void) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-	if (running_time.minutes == 0 && running_time.seconds == 0) {
+	PORTB &= ~(1 << PB4);
+	if (running_time.minutes == 0 && running_time.seconds == 1) {
 		if (state == WORK) {
 			running_time = rest_time;
 			state = REST;
@@ -147,6 +149,7 @@ ISR(TIMER1_COMPA_vect) {
 			running_time = work_time;
 			state = WORK;
 		}
+		PORTB |= (1 << PB4);
 	} else if (running_time.seconds == 0) {
 		running_time.minutes--;
 		running_time.seconds = 59;
