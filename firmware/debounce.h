@@ -23,7 +23,8 @@
 #include "time.h"
 
 #define BUTTON_THRESHOLD 20
-#define SECOND_THRESHOLD 15
+#define MINUTE_THRESHOLD 20
+#define SECOND_THRESHOLD 20
 
 enum Button {
 	BUTTON_START,
@@ -32,8 +33,11 @@ enum Button {
 	BUTTON_COUNT
 };
 
-struct Time debounce_seconds(struct Time existing, uint16_t adc_value);
-
+struct Time debounce_time(
+	struct Time existing,
+	uint8_t minutes_port,
+	uint8_t seconds_port
+);
 uint8_t debounce_button(enum Button button);
 
 #endif

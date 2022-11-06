@@ -36,7 +36,7 @@ volatile struct Time work_time = {0, 0};
 volatile struct Time rest_time = {0, 0};
 
 volatile struct Time running_time = {0, 0};
-volatile uint8_t round = 0;
+volatile uint8_t current_round = 0;
 
 volatile enum State state = STARTUP;
 volatile enum State paused_state;
@@ -55,20 +55,22 @@ int main(void) {
 
 		switch (state) {
 		case STARTUP:
-			new_work = debounce_seconds(
+			new_work = debounce_time(
 				work_time,
-				read_adc(ADC_WORK_SECONDS)
+				ADC_WORK_MINUTES,
+				ADC_WORK_SECONDS
 			);
-			if (new_work.seconds != work_time.seconds) {
-				work_time.seconds = new_work.seconds;
+			if (!time_eq(new_work, work_time)) {
+				work_time = new_work;
 				set_time(pixels, work_time, 0, 255, 0);
 			}
 
-			new_rest = debounce_seconds(
+			new_rest = debounce_time(
 				rest_time,
-				read_adc(ADC_REST_SECONDS)
+				ADC_REST_MINUTES,
+				ADC_REST_SECONDS
 			);
-			if (new_rest.seconds != rest_time.seconds) {
+			if (!time_eq(new_rest, rest_time)) {
 				rest_time = new_rest;
 				set_time(pixels, rest_time, 255, 0, 0);
 			}
@@ -115,7 +117,7 @@ int main(void) {
 
 		}
 
-		set_round(pixels, round, 0, 0, 255);
+		set_round(pixels, current_round, 0, 0, 255);
 		write_pixels(pixels, sizeof(pixels));
 		_delay_ms(1);
 	}

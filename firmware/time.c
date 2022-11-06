@@ -16,16 +16,8 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TIME_H
-#define TIME_H
+#include "time.h"
 
-#include <stdint.h>
-
-struct Time {
-	uint8_t minutes;
-	uint8_t seconds;
-};
-
-uint8_t time_eq(struct Time a, struct Time b);
-
-#endif
+uint8_t time_eq(struct Time a, struct Time b) {
+	return a.minutes == b.minutes && a.seconds == b.seconds;
+}

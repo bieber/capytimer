@@ -18,8 +18,40 @@
 
 #include <stdint.h>
 
+#include "adc.h"
 #include "debounce.h"
 #include "time.h"
+
+struct Time debounce_minutes(struct Time existing, uint16_t adc_value);
+struct Time debounce_seconds(struct Time existing, uint16_t adc_value);
+
+struct Time debounce_time(
+	struct Time existing,
+	uint8_t minutes_port,
+	uint8_t seconds_port
+) {
+	struct Time new_time = existing;
+	new_time = debounce_minutes(new_time, read_adc(minutes_port));
+	new_time = debounce_seconds(new_time, read_adc(seconds_port));
+	return new_time;
+}
+
+struct Time debounce_minutes(struct Time existing, uint16_t adc_value) {
+	uint16_t prospective = (adc_value * 11 / 1024);
+	if (prospective > existing.minutes) {
+		uint16_t boundary = 1024 * prospective / 11;
+		if (adc_value < boundary + MINUTE_THRESHOLD) {
+			return existing;
+		}
+	} else if (0) {
+		uint16_t boundary = 1024 * existing.minutes / 11;
+		if (adc_value > boundary - MINUTE_THRESHOLD) {
+			return existing;
+		}
+	}
+	existing.minutes = prospective;
+	return existing;
+}
 
 struct Time debounce_seconds(struct Time existing, uint16_t adc_value) {
 	uint16_t prospective = (adc_value * 12 / 1024) * 5;
