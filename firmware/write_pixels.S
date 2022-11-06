@@ -19,7 +19,7 @@
 #define __SFR_OFFSET 0
 #include <avr/io.h>
 
-.equ OUTBIT, 1
+#include "pins.h"
 
 ;; void write_pixels(uint8_t *pixels, uint16_t count)
 ;; pixels: r24
@@ -46,17 +46,17 @@ write_pixels:
 	in r20, SREG				; Preserving status register
 	cli							; Disable interrupts for cycle counting
 
-	in r21, PORTB				; PORTB with OUTBIT turned off
-	andi r21, ~(1 << OUTBIT)
+	in r21, PORT_SCREEN			; PORT_SCREEN with PIN_SCREEN turned off
+	andi r21, ~(1 << PIN_SCREEN)
 
-	in r22, PORTB				; PORTB with OUTBIT turned on
-	ori r22, (1 << OUTBIT)
+	in r22, PORT_SCREEN			; PORT_SCREEN with PIN_SCREEN turned on
+	ori r22, (1 << PIN_SCREEN)
 
 	ld r18, X+
 	ldi r19, 8					; 8 bits per byte
 
 begin:
-	out PORTB, r22				; Output high, t=0
+	out PORT_SCREEN, r22		; Output high, t=0
 
 	lsl r18						; Rotate MSB into C, t=1
 	brcs handle_1				; Branch based on bit
@@ -68,7 +68,7 @@ handle_0:
 	nop							; t=5
 	nop							; t=6
 	nop							; t=7
-	out PORTB, r21				; Output low, t=8
+	out PORT_SCREEN, r21		; Output low, t=8
 	dec r19						; Decrement bit counter, t=9
 	breq next_byte_0			; If we're out of bits, decrement byte counter
 	;; t=10
@@ -115,7 +115,7 @@ same_byte_1:
 	nop							; t=13
 	nop							; t=14
 	nop							; t=15
-	out PORTB, r21				; Output low, t=16
+	out PORT_SCREEN, r21		; Output low, t=16
 	breq end					; If we're out of bytes, return, t=17
 	nop							; t=18
 	nop							; t=19

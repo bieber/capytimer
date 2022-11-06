@@ -16,12 +16,36 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TIME_H
-#define TIME_H
+#ifndef PINS_H
+#define PINS_H
 
-struct Time {
-	uint8_t minutes;
-	uint8_t seconds;
-};
+#include <avr/io.h>
+
+#define SCREEN_SIZE 384
+
+#define DDR_SCREEN DDRB
+#define PORT_SCREEN PORTB
+#define PIN_SCREEN PB1
+
+#define DDR_BUZZ DDRB
+#define PORT_BUZZ PORTB
+#define PIN_BUZZ PB4
+
+#define PULLUP_START PORTB
+#define PORT_START PINB
+#define PIN_START PB2
+
+#define PULLUP_STOP PORTB
+#define PORT_STOP PINB
+#define PIN_STOP PB3
+
+#define ADC_WORK_MINUTES 2
+#define ADC_WORK_SECONDS 0
+#define ADC_REST_MINUTES 3
+#define ADC_REST_SECONDS 1
+
+// Turn timer 1 on with a 1024 prescaler
+#define TIMER_1_ON ((1 << CS12) | (1 << CS10))
+#define TIMER_1_OFF (~((1 << CS10) | (1 << CS11) | (1 << CS12)))
 
 #endif

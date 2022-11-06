@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2022, Robert Bieber
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see
+ * <https://www.gnu.org/licenses/>.
+ */
+
 #include <stdint.h>
 
 #include "debounce.h"
@@ -20,36 +38,30 @@ struct Time debounce_seconds(struct Time existing, uint16_t adc_value) {
 	return existing;
 }
 
-uint8_t debounce_start(uint8_t value) {
-	static uint8_t count = 0;
-	static uint8_t last_value = 0;
+uint8_t debounce_button(enum Button button) {
+	static uint8_t counts[BUTTON_COUNT];
+	static uint8_t last_values[BUTTON_COUNT];
 
-	if (value == last_value) {
-		count++;
+	uint8_t value;
+	switch (button) {
+	case BUTTON_START:
+		value = !(PORT_START & (1 << PIN_START));
+		break;
+
+	case BUTTON_STOP:
+		value = !(PORT_STOP & (1 << PIN_STOP));
+		break;
+	}
+
+	if (value == last_values[button]) {
+		counts[button]++;
 	} else {
-		count = 0;
-		last_value = value;
+		counts[button] = 0;
+		last_values[button] = value;
 	}
 
-	if (count > BUTTON_COUNT) {
-		return last_value;
-	}
-	return 0;
-}
-
-uint8_t debounce_stop(uint8_t value) {
-	static uint8_t count = 0;
-	static uint8_t last_value = 0;
-
-	if (value == last_value) {
-		count++;
-	} else {
-		count = 0;
-		last_value = value;
-	}
-
-	if (count > BUTTON_COUNT) {
-		return last_value;
+	if (counts[button] > BUTTON_THRESHOLD) {
+		return last_values[button];
 	}
 	return 0;
 }

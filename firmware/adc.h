@@ -16,12 +16,11 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TIME_H
-#define TIME_H
+#ifndef ADC_H
+#define ADC_H
 
-struct Time {
-	uint8_t minutes;
-	uint8_t seconds;
-};
+#include <stdint.h>
+
+uint16_t read_adc(uint8_t pin);
 
 #endif

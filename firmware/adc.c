@@ -16,12 +16,14 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TIME_H
-#define TIME_H
+#include <avr/io.h>
 
-struct Time {
-	uint8_t minutes;
-	uint8_t seconds;
-};
+#include "adc.h"
 
-#endif
+uint16_t read_adc(uint8_t pin) {
+	ADMUX = (ADMUX & ~0b11111) | pin;
+	ADCSRA |= (1 << ADSC);
+	while (ADCSRA & (1 << ADSC));
+
+	return ADC;
+}

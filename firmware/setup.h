@@ -16,12 +16,11 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TIME_H
-#define TIME_H
+#ifndef SETUP_H
+#define SETUP_H
 
-struct Time {
-	uint8_t minutes;
-	uint8_t seconds;
-};
+#include "pins.h"
+
+void setup(uint8_t pixels[SCREEN_SIZE]);
 
 #endif

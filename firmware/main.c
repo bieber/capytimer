@@ -22,8 +22,11 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 
+#include "adc.h"
 #include "debounce.h"
 #include "digits.h"
+#include "pins.h"
+#include "setup.h"
 #include "time.h"
 #include "write_pixels.h"
 
@@ -38,94 +41,72 @@ volatile enum State state = STARTUP;
 volatile enum State paused_state;
 
 int main(void) {
-	sei();
-	DDRB = 0b00010011;
-	PORTB = 0b00001100;
-
-	uint8_t buf[384];
-	for (int i = 0; i < sizeof(buf); i++) {
-		buf[i] = 0;
-	}
-
-	// Use AVCC for ADC reference
-    ADMUX = (1<<REFS0);
-	// Enable ADC and set f/128 prescaler for accuracy
-    ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0);
-
-	// Timer 1 operates in CTC mode counting off seconds and sending
-	// interrupts
-	TCCR1B |= (1 << WGM12);
-	TIMSK1 |= (1 << OCIE1A);
-	OCR1A = 19531;
-
-	// Turn timer 1 on with a 1024 prescaler
-	uint8_t timer_1_on = (1 << CS12) | (1 << CS10);
-	uint8_t timer_1_off = ~((1 << CS10) | (1 << CS11) | (1 << CS12));
+	uint8_t pixels[SCREEN_SIZE];
+	setup(pixels);
 
 	uint8_t initial_time_set = 0;
 
+	struct Time new_work;
+	struct Time new_rest;
+
 	while (1) {
+		uint8_t time_set = 0;
+
 		switch (state) {
 		case STARTUP:
-			ADMUX = ADMUX & ~0b11111;
-			ADCSRA |= (1 <<ADSC);
-			while (ADCSRA & (1 << ADSC));
-
-			struct Time new_work = debounce_seconds(work_time, ADC);
+			new_work = debounce_seconds(
+				work_time,
+				read_adc(ADC_WORK_SECONDS)
+			);
 			if (new_work.seconds != work_time.seconds) {
 				work_time.seconds = new_work.seconds;
-				set_time(buf, work_time, 0, 255, 0);
+				set_time(pixels, work_time, 0, 255, 0);
 			}
 
-			ADMUX = (ADMUX & ~0b11111) | 1;
-			ADCSRA |= (1 <<ADSC);
-			while (ADCSRA & (1 << ADSC));
-
-			struct Time new_rest = debounce_seconds(rest_time, ADC);
+			new_rest = debounce_seconds(
+				rest_time,
+				read_adc(ADC_REST_SECONDS)
+			);
 			if (new_rest.seconds != rest_time.seconds) {
 				rest_time = new_rest;
-				set_time(buf, rest_time, 255, 0, 0);
+				set_time(pixels, rest_time, 255, 0, 0);
 			}
 
 			if (!initial_time_set) {
 				initial_time_set = 1;
-				set_time(buf, work_time, 0, 255, 0);
+				set_time(pixels, work_time, 0, 255, 0);
 			}
 
-			if (debounce_start(!(PINB & (1 << PB2)))) {
+			if (debounce_button(BUTTON_START)) {
 				running_time = work_time;
-				TCCR1B |= timer_1_on;
+				TCCR1B |= TIMER_1_ON;
 				state = WORK;
 			}
 			break;
 
 		case WORK:
-			set_time(buf, running_time, 0, 255, 0);
-			if (debounce_stop(!(PINB & (1 << PB3)))) {
-				TCCR1B &= timer_1_off;
-				paused_state = state;
-				state = PAUSE;
-				while (!(PINB & (1 << PB3)));
-			}
-			break;
-
+			set_time(pixels, running_time, 0, 255, 0);
+			time_set = 1;
+			// fallthrough
 		case REST:
-			set_time(buf, running_time, 255, 0, 0);
-			if (debounce_stop(!(PINB & (1 << PB3)))) {
-				TCCR1B &= timer_1_off;
+			if (!time_set) {
+				set_time(pixels, running_time, 255, 0, 0);
+			}
+			if (debounce_button(BUTTON_STOP)) {
+				TCCR1B &= TIMER_1_OFF;
 				paused_state = state;
 				state = PAUSE;
-				while (!(PINB & (1 << PB3)));
+				while (!(PORT_STOP & (1 << PIN_STOP)));
 			}
 			break;
 
 		case PAUSE:
-			if (debounce_start(!(PINB & (1 << PB2)))) {
+			if (debounce_button(BUTTON_START)) {
 				state = paused_state;
-				TCCR1B |= timer_1_on;
+				TCCR1B |= TIMER_1_ON;
 			}
-			if (debounce_stop(!(PINB & (1 << PB3)))) {
-				set_time(buf, work_time, 0, 255, 0);
+			if (debounce_button(BUTTON_STOP)) {
+				set_time(pixels, work_time, 0, 255, 0);
 				TCNT1 = 0;
 				state = STARTUP;
 			}
@@ -133,14 +114,15 @@ int main(void) {
 
 		}
 
-		write_pixels(buf, sizeof(buf));
+		write_pixels(pixels, sizeof(pixels));
+		_delay_ms(1);
 	}
 
 	return 0;
 }
 
 ISR(TIMER1_COMPA_vect) {
-	PORTB &= ~(1 << PB4);
+	PORT_BUZZ &= ~(1 << PIN_BUZZ);
 	if (running_time.minutes == 0 && running_time.seconds == 1) {
 		if (state == WORK) {
 			running_time = rest_time;
@@ -149,7 +131,7 @@ ISR(TIMER1_COMPA_vect) {
 			running_time = work_time;
 			state = WORK;
 		}
-		PORTB |= (1 << PB4);
+		PORT_BUZZ |= (1 << PIN_BUZZ);
 	} else if (running_time.seconds == 0) {
 		running_time.minutes--;
 		running_time.seconds = 59;
