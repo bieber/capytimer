@@ -36,6 +36,7 @@ volatile struct Time work_time = {0, 0};
 volatile struct Time rest_time = {0, 0};
 
 volatile struct Time running_time = {0, 0};
+volatile uint8_t round = 0;
 
 volatile enum State state = STARTUP;
 volatile enum State paused_state;
@@ -114,6 +115,7 @@ int main(void) {
 
 		}
 
+		set_round(pixels, round, 0, 0, 255);
 		write_pixels(pixels, sizeof(pixels));
 		_delay_ms(1);
 	}

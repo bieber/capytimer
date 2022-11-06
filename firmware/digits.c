@@ -52,7 +52,28 @@ void set_digit(uint8_t *buf, uint8_t value, uint8_t r, uint8_t g, uint8_t b) {
 	}
 }
 
+void set_divider(uint8_t *buf, uint8_t r, uint8_t g, uint8_t b) {
+	for (uint8_t i = 0; i < 2; i++) {
+		buf[3*i] = g;
+		buf[3*i + 1] = r;
+		buf[3*i + 2] = b;
+	}
+}
+
 void set_time(uint8_t *buf, struct Time time, uint8_t r, uint8_t g, uint8_t b) {
-	set_digit(DIGIT_ADDRESS(buf, 0), time.seconds / 10, r, g, b);
-	set_digit(DIGIT_ADDRESS(buf, 1), time.seconds % 10, r, g, b);
+	uint8_t tens_minute = time.minutes / 10;
+	if (tens_minute > 0) {
+		set_digit(DIGIT_ADDRESS(buf, 0), tens_minute, r, g, b);
+	} else {
+		set_digit(DIGIT_ADDRESS(buf, 0), 0, 0, 0, 0);
+	}
+	set_digit(DIGIT_ADDRESS(buf, 1), time.minutes % 10, r, g, b);
+	set_digit(DIGIT_ADDRESS(buf, 2), time.seconds / 10, r, g, b);
+	set_digit(DIGIT_ADDRESS(buf, 3), time.seconds % 10, r, g, b);
+	set_divider(DIVIDER_ADDRESS(buf), r, g, b);
+}
+
+void set_round(uint8_t *buf, uint8_t round, uint8_t r, uint8_t g, uint8_t b) {
+	set_digit(DIGIT_ADDRESS(buf, 4), round / 10, r, g, b);
+	set_digit(DIGIT_ADDRESS(buf, 5), round % 10, r, g, b);
 }
