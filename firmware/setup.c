@@ -42,8 +42,14 @@ void setup(uint8_t pixels[SCREEN_SIZE]) {
 	// Enable ADC and set f/128 prescaler for accuracy
     ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0);
 
-	// Timer 1 operates in CTC mode counting off seconds and sending
-	// interrupts
+	// Timer 0 operates in CTC mode and counts off approximate
+	// 10ms increments
+	TCCR0A |= (1 << WGM01);
+	TIMSK0 |= (1 << OCIE0A);
+	OCR0A = 200;
+
+	// Timer 1 operates in CTC mode counting off seconds for the main
+	// timer
 	TCCR1B |= (1 << WGM12);
 	TIMSK1 |= (1 << OCIE1A);
 	OCR1A = 19531;

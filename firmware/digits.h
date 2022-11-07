@@ -29,6 +29,7 @@
 
 void set_digit(uint8_t *buf, uint8_t value, uint8_t r, uint8_t g, uint8_t b);
 void set_time(uint8_t *buf, struct Time time, uint8_t r, uint8_t g, uint8_t b);
+void set_number(uint8_t *buf, uint16_t x, uint8_t r, uint8_t g, uint8_t b);
 void set_round(uint8_t *buf, uint8_t round, uint8_t r, uint8_t g, uint8_t b);
 
 #endif

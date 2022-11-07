@@ -30,6 +30,8 @@
 #include "time.h"
 #include "write_pixels.h"
 
+#define REST_DISPLAY_TIME_MS 5000
+
 enum State {STARTUP, WORK, REST, PAUSE};
 
 volatile struct Time work_time = {0, 0};
@@ -37,6 +39,7 @@ volatile struct Time rest_time = {0, 0};
 
 volatile struct Time running_time = {0, 0};
 volatile uint8_t current_round = 0;
+volatile uint16_t display_rest_millis = 0;
 
 volatile enum State state = STARTUP;
 volatile enum State paused_state;
@@ -68,7 +71,8 @@ int main(void) {
 			);
 			if (!time_eq(new_work, work_time)) {
 				work_time = new_work;
-				set_time(pixels, work_time, 0, 255, 0);
+				TCCR0B &= TIMER_0_OFF;
+				display_rest_millis = 0;
 			}
 
 			new_rest = debounce_time(
@@ -78,11 +82,18 @@ int main(void) {
 			);
 			if (!time_eq(new_rest, rest_time)) {
 				rest_time = new_rest;
-				set_time(pixels, rest_time, 255, 0, 0);
+				if (initial_time_set) {
+					display_rest_millis = REST_DISPLAY_TIME_MS / 10;
+					TCCR0B |= TIMER_0_ON;
+				}
 			}
 
 			if (!initial_time_set) {
 				initial_time_set = 1;
+			}
+			if (display_rest_millis > 0) {
+				set_time(pixels, rest_time, 255, 0, 0);
+			} else {
 				set_time(pixels, work_time, 0, 255, 0);
 			}
 
@@ -133,6 +144,13 @@ ISR(TIMER1_COMPA_vect) {
 		running_time.seconds = 59;
 	} else {
 		running_time.seconds--;
+	}
+}
+
+ISR(TIMER0_COMPA_vect) {
+	display_rest_millis--;
+	if (display_rest_millis == 0) {
+		TCCR0B &= TIMER_0_OFF;
 	}
 }
 

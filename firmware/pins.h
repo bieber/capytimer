@@ -44,8 +44,12 @@
 #define ADC_REST_MINUTES 3
 #define ADC_REST_SECONDS 1
 
+// Turn timer 0 on with a 1024 prescaler
+#define TIMER_0_ON ((1 << CS02) | (1 << CS00))
+#define TIMER_0_OFF (~((1 << CS02) | (1 << CS01) | (1 << CS00)))
+
 // Turn timer 1 on with a 1024 prescaler
 #define TIMER_1_ON ((1 << CS12) | (1 << CS10))
-#define TIMER_1_OFF (~((1 << CS10) | (1 << CS11) | (1 << CS12)))
+#define TIMER_1_OFF (~((1 << CS12) | (1 << CS11) | (1 << CS10)))
 
 #endif

@@ -73,6 +73,17 @@ void set_time(uint8_t *buf, struct Time time, uint8_t r, uint8_t g, uint8_t b) {
 	set_divider(DIVIDER_ADDRESS(buf), r, g, b);
 }
 
+void set_number(uint8_t *buf, uint16_t x, uint8_t r, uint8_t g, uint8_t b) {
+	set_divider(DIVIDER_ADDRESS(buf), 0, 0, 0);
+	set_digit(DIGIT_ADDRESS(buf, 3), x % 10, r, g, b);
+	x /= 10;
+	set_digit(DIGIT_ADDRESS(buf, 2), x % 10, r, g, b);
+	x /= 10;
+	set_digit(DIGIT_ADDRESS(buf, 1), x % 10, r, g, b);
+	x /= 10;
+	set_digit(DIGIT_ADDRESS(buf, 0), x % 10, r, g, b);
+}
+
 void set_round(uint8_t *buf, uint8_t round, uint8_t r, uint8_t g, uint8_t b) {
 	set_digit(DIGIT_ADDRESS(buf, 4), round / 10, r, g, b);
 	set_digit(DIGIT_ADDRESS(buf, 5), round % 10, r, g, b);
