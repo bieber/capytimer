@@ -52,4 +52,8 @@
 #define TIMER_1_ON ((1 << CS12) | (1 << CS10))
 #define TIMER_1_OFF (~((1 << CS12) | (1 << CS11) | (1 << CS10)))
 
+// Turn timer 2 on ith a 1024 prescaler
+#define TIMER_2_ON ((1 << CS22) | (1 << CS21) | (1 << CS00))
+#define TIMER_2_OFF (~((1 << CS22) | (1 << CS21) | (1 << CS20)))
+
 #endif

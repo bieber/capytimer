@@ -22,7 +22,7 @@
 #include "pins.h"
 #include "time.h"
 
-#define BUTTON_THRESHOLD 10
+#define BUTTON_THRESHOLD 6
 #define MINUTE_THRESHOLD 20
 #define SECOND_THRESHOLD 20
 

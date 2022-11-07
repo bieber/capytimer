@@ -31,6 +31,9 @@
 #include "write_pixels.h"
 
 #define REST_DISPLAY_TIME_MS 5000
+#define BUZZ_TIME_REST_MS 800
+#define BUZZ_TIME_WORK_MS 1000
+#define BUZZ_ALTERNATE_MS 40
 
 enum State {STARTUP, WORK, REST, PAUSE};
 
@@ -39,7 +42,12 @@ volatile struct Time rest_time = {0, 0};
 
 volatile struct Time running_time = {0, 0};
 volatile uint8_t current_round = 0;
-volatile uint16_t display_rest_millis = 0;
+
+volatile uint16_t display_rest_cycles = 0;
+
+volatile uint16_t buzz_cycles = 0;
+volatile uint16_t buzz_alternate_cycles = 0;
+volatile uint8_t buzz_alternate = 0;
 
 volatile enum State state = STARTUP;
 volatile enum State paused_state;
@@ -49,6 +57,10 @@ void pause();
 void resume();
 void reset();
 void advance_state();
+
+void buzz_work();
+void buzz_rest();
+void buzz_off();
 
 int main(void) {
 	uint8_t pixels[SCREEN_SIZE];
@@ -72,7 +84,7 @@ int main(void) {
 			if (!time_eq(new_work, work_time)) {
 				work_time = new_work;
 				TCCR0B &= TIMER_0_OFF;
-				display_rest_millis = 0;
+				display_rest_cycles = 0;
 			}
 
 			new_rest = debounce_time(
@@ -83,7 +95,7 @@ int main(void) {
 			if (!time_eq(new_rest, rest_time)) {
 				rest_time = new_rest;
 				if (initial_time_set) {
-					display_rest_millis = REST_DISPLAY_TIME_MS / 10;
+					display_rest_cycles = REST_DISPLAY_TIME_MS / 10;
 					TCCR0B |= TIMER_0_ON;
 				}
 			}
@@ -91,7 +103,7 @@ int main(void) {
 			if (!initial_time_set) {
 				initial_time_set = 1;
 			}
-			if (display_rest_millis > 0) {
+			if (display_rest_cycles > 0) {
 				set_time(pixels, rest_time, 255, 0, 0);
 			} else {
 				set_time(pixels, work_time, 0, 255, 0);
@@ -136,7 +148,6 @@ int main(void) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-	PORT_BUZZ &= ~(1 << PIN_BUZZ);
 	if (running_time.minutes == 0 && running_time.seconds <= 1) {
 		advance_state();
 	} else if (running_time.seconds == 0) {
@@ -148,9 +159,24 @@ ISR(TIMER1_COMPA_vect) {
 }
 
 ISR(TIMER0_COMPA_vect) {
-	display_rest_millis--;
-	if (display_rest_millis == 0) {
+	display_rest_cycles--;
+	if (display_rest_cycles == 0) {
 		TCCR0B &= TIMER_0_OFF;
+	}
+}
+
+ISR(TIMER2_COMPA_vect) {
+	buzz_cycles--;
+	if (buzz_cycles == 0) {
+		buzz_off();
+		return;
+	}
+	if (buzz_alternate) {
+		buzz_alternate_cycles--;
+		if (buzz_alternate_cycles == 0) {
+			buzz_alternate_cycles = BUZZ_ALTERNATE_MS / 10;
+			PORT_BUZZ ^= (1 << PIN_BUZZ);
+		}
 	}
 }
 
@@ -161,16 +187,28 @@ void start() {
 		return;
 	}
 
-	running_time = work_time;
+
+	if (time_empty(work_time)) {
+		// If there's no work time set, we'll have to go straight to
+		// the rest time
+		running_time = rest_time;
+		state = REST;
+		buzz_rest();
+	} else {
+		running_time = work_time;
+		state = WORK;
+		buzz_work();
+	}
+
 	current_round = 1;
 	TCCR1B |= TIMER_1_ON;
-	state = WORK;
 }
 
 void pause() {
 	TCCR1B &= TIMER_1_OFF;
 	paused_state = state;
 	state = PAUSE;
+	buzz_off();
 }
 
 void resume() {
@@ -186,13 +224,48 @@ void reset() {
 
 void advance_state() {
 	if (state == WORK) {
-		running_time = rest_time;
-		state = REST;
+		if (time_empty(rest_time)) {
+			// If there's no rest time, just reset the work time
+			// counter
+			running_time = work_time;
+			current_round = (current_round + 1) % 100;
+			buzz_work();
+		} else {
+			running_time = rest_time;
+			state = REST;
+			buzz_rest();
+		}
 	} else if (state == REST) {
-		running_time = work_time;
-		state = WORK;
 		current_round = (current_round + 1) % 100;
+		if (time_empty(work_time)) {
+			// If there's no work time, just reset the rest time
+			// counter
+			running_time = rest_time;
+			buzz_rest();
+		} else {
+			running_time = work_time;
+			state = WORK;
+			buzz_work();
+		}
 	}
+}
 
+void buzz_work() {
+	buzz_cycles = BUZZ_TIME_WORK_MS / 10;
+	buzz_alternate_cycles = BUZZ_ALTERNATE_MS / 10;
+	buzz_alternate = 1;
 	PORT_BUZZ |= (1 << PIN_BUZZ);
+	TCCR2B |= TIMER_2_ON;
+}
+
+void buzz_rest() {
+	buzz_cycles = BUZZ_TIME_REST_MS / 10;
+	buzz_alternate = 0;
+	PORT_BUZZ |= (1 << PIN_BUZZ);
+	TCCR2B |= TIMER_2_ON;
+}
+
+void buzz_off() {
+	TCCR2B &= TIMER_2_OFF;
+	PORT_BUZZ &= ~(1 << PIN_BUZZ);
 }

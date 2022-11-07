@@ -43,7 +43,7 @@ void setup(uint8_t pixels[SCREEN_SIZE]) {
     ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0);
 
 	// Timer 0 operates in CTC mode and counts off approximate
-	// 10ms increments
+	// 10ms increments for the rest time display
 	TCCR0A |= (1 << WGM01);
 	TIMSK0 |= (1 << OCIE0A);
 	OCR0A = 200;
@@ -53,6 +53,12 @@ void setup(uint8_t pixels[SCREEN_SIZE]) {
 	TCCR1B |= (1 << WGM12);
 	TIMSK1 |= (1 << OCIE1A);
 	OCR1A = 19531;
+
+	// Timer 2 operates in CTC mode and counts off approximate 10ms
+	// increments for the buzzer
+	TCCR2A |= (1 << WGM21);
+	TIMSK2 |= (1 << OCIE2A);
+	OCR2A = 200;
 
 	// Turn on interrupts
 	sei();
