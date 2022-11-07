@@ -41,6 +41,12 @@ volatile uint8_t current_round = 0;
 volatile enum State state = STARTUP;
 volatile enum State paused_state;
 
+void start();
+void pause();
+void resume();
+void reset();
+void advance_state();
+
 int main(void) {
 	uint8_t pixels[SCREEN_SIZE];
 	setup(pixels);
@@ -81,9 +87,7 @@ int main(void) {
 			}
 
 			if (debounce_button(BUTTON_START)) {
-				running_time = work_time;
-				TCCR1B |= TIMER_1_ON;
-				state = WORK;
+				start();
 			}
 			break;
 
@@ -96,25 +100,20 @@ int main(void) {
 				set_time(pixels, running_time, 255, 0, 0);
 			}
 			if (debounce_button(BUTTON_STOP)) {
-				TCCR1B &= TIMER_1_OFF;
-				paused_state = state;
-				state = PAUSE;
+				pause();
 				while (!(PORT_STOP & (1 << PIN_STOP)));
 			}
 			break;
 
 		case PAUSE:
 			if (debounce_button(BUTTON_START)) {
-				state = paused_state;
-				TCCR1B |= TIMER_1_ON;
+				resume();
 			}
 			if (debounce_button(BUTTON_STOP)) {
+				reset();
 				set_time(pixels, work_time, 0, 255, 0);
-				TCNT1 = 0;
-				state = STARTUP;
 			}
 			break;
-
 		}
 
 		set_round(pixels, current_round, 0, 0, 255);
@@ -127,19 +126,55 @@ int main(void) {
 
 ISR(TIMER1_COMPA_vect) {
 	PORT_BUZZ &= ~(1 << PIN_BUZZ);
-	if (running_time.minutes == 0 && running_time.seconds == 1) {
-		if (state == WORK) {
-			running_time = rest_time;
-			state = REST;
-		} else if (state == REST) {
-			running_time = work_time;
-			state = WORK;
-		}
-		PORT_BUZZ |= (1 << PIN_BUZZ);
+	if (running_time.minutes == 0 && running_time.seconds <= 1) {
+		advance_state();
 	} else if (running_time.seconds == 0) {
 		running_time.minutes--;
 		running_time.seconds = 59;
 	} else {
 		running_time.seconds--;
 	}
+}
+
+void start() {
+	if (time_empty(work_time) && time_empty(rest_time)) {
+		// We need at least one of our two periods to be greater than
+		// 0, otherwise the buzzer will just run nonstop
+		return;
+	}
+
+	running_time = work_time;
+	current_round = 1;
+	TCCR1B |= TIMER_1_ON;
+	state = WORK;
+}
+
+void pause() {
+	TCCR1B &= TIMER_1_OFF;
+	paused_state = state;
+	state = PAUSE;
+}
+
+void resume() {
+	state = paused_state;
+	TCCR1B |= TIMER_1_ON;
+}
+
+void reset() {
+	TCNT1 = 0;
+	state = STARTUP;
+	current_round = 0;
+}
+
+void advance_state() {
+	if (state == WORK) {
+		running_time = rest_time;
+		state = REST;
+	} else if (state == REST) {
+		running_time = work_time;
+		state = WORK;
+		current_round = (current_round + 1) % 100;
+	}
+
+	PORT_BUZZ |= (1 << PIN_BUZZ);
 }

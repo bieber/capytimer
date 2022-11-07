@@ -27,5 +27,6 @@ struct Time {
 };
 
 uint8_t time_eq(struct Time a, struct Time b);
+uint8_t time_empty(struct Time t);
 
 #endif

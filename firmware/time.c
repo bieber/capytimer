@@ -21,3 +21,7 @@
 uint8_t time_eq(struct Time a, struct Time b) {
 	return a.minutes == b.minutes && a.seconds == b.seconds;
 }
+
+uint8_t time_empty(struct Time t) {
+	return t.minutes == 0 && t.seconds == 0;
+}
