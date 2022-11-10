@@ -43,6 +43,7 @@
 #define ADC_WORK_SECONDS 0
 #define ADC_REST_MINUTES 3
 #define ADC_REST_SECONDS 1
+#define ADC_BRIGHTNESS 4
 
 // Turn timer 0 on with a 1024 prescaler
 #define TIMER_0_ON ((1 << CS02) | (1 << CS00))

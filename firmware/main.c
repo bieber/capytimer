@@ -37,8 +37,9 @@
 
 enum State {STARTUP, WORK, REST, PAUSE};
 
-volatile struct Time work_time = {0, 0};
-volatile struct Time rest_time = {0, 0};
+struct Time work_time = {0, 0};
+struct Time rest_time = {0, 0};
+uint8_t brightness = 0;
 
 volatile struct Time running_time = {0, 0};
 volatile uint8_t current_round = 0;
@@ -72,6 +73,7 @@ int main(void) {
 	struct Time new_rest;
 
 	while (1) {
+		brightness = debounce_brightness(brightness, ADC_BRIGHTNESS);
 		uint8_t time_set = 0;
 
 		switch (state) {
@@ -104,9 +106,9 @@ int main(void) {
 				initial_time_set = 1;
 			}
 			if (display_rest_cycles > 0) {
-				set_time(pixels, rest_time, 255, 0, 0);
+				set_time(pixels, rest_time, brightness, 0, 0);
 			} else {
-				set_time(pixels, work_time, 0, 255, 0);
+				set_time(pixels, work_time, 0, brightness, 0);
 			}
 
 			if (debounce_button(BUTTON_START)) {
@@ -115,12 +117,12 @@ int main(void) {
 			break;
 
 		case WORK:
-			set_time(pixels, running_time, 0, 255, 0);
+			set_time(pixels, running_time, 0, brightness, 0);
 			time_set = 1;
 			// fallthrough
 		case REST:
 			if (!time_set) {
-				set_time(pixels, running_time, 255, 0, 0);
+				set_time(pixels, running_time, brightness, 0, 0);
 			}
 			if (debounce_button(BUTTON_STOP)) {
 				pause();
@@ -134,12 +136,12 @@ int main(void) {
 			}
 			if (debounce_button(BUTTON_STOP)) {
 				reset();
-				set_time(pixels, work_time, 0, 255, 0);
+				set_time(pixels, work_time, 0, brightness, 0);
 			}
 			break;
 		}
 
-		set_round(pixels, current_round, 0, 0, 255);
+		set_round(pixels, current_round, 0, 0, brightness);
 		write_pixels(pixels, sizeof(pixels));
 		_delay_ms(1);
 	}

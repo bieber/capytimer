@@ -25,6 +25,7 @@
 #define BUTTON_THRESHOLD 6
 #define MINUTE_THRESHOLD 20
 #define SECOND_THRESHOLD 20
+#define BRIGHTNESS_THRESHOLD 50
 
 enum Button {
 	BUTTON_START,
@@ -38,6 +39,9 @@ struct Time debounce_time(
 	uint8_t minutes_port,
 	uint8_t seconds_port
 );
+
 uint8_t debounce_button(enum Button button);
+
+uint8_t debounce_brightness(uint8_t existing, uint8_t port);
 
 #endif

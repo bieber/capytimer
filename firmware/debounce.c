@@ -22,6 +22,8 @@
 #include "debounce.h"
 #include "time.h"
 
+uint16_t BRIGHTNESS_THRESHOLDS[4] = {204, 408, 612, 816};
+
 struct Time debounce_minutes(struct Time existing, uint16_t adc_value);
 struct Time debounce_seconds(struct Time existing, uint16_t adc_value);
 
@@ -43,7 +45,7 @@ struct Time debounce_minutes(struct Time existing, uint16_t adc_value) {
 		if (adc_value < boundary + MINUTE_THRESHOLD) {
 			return existing;
 		}
-	} else if (0) {
+	} else {
 		uint16_t boundary = 1024 * existing.minutes / 11;
 		if (adc_value > boundary - MINUTE_THRESHOLD) {
 			return existing;
@@ -60,7 +62,7 @@ struct Time debounce_seconds(struct Time existing, uint16_t adc_value) {
 		if (adc_value < boundary + SECOND_THRESHOLD) {
 			return existing;
 		}
-	} else if (0) {
+	} else {
 		uint16_t boundary = 1024 * existing.seconds / 60;
 		if (adc_value > boundary - SECOND_THRESHOLD) {
 			return existing;
@@ -68,6 +70,42 @@ struct Time debounce_seconds(struct Time existing, uint16_t adc_value) {
 	}
 	existing.seconds = prospective;
 	return existing;
+}
+
+uint8_t debounce_brightness(uint8_t existing, uint8_t port) {
+	uint16_t adc_value = read_adc(port);
+
+	uint16_t boundary = 0;
+	uint8_t bucket = 1;
+	uint8_t existing_bucket = existing / 51;
+	for (int i = 0; i < sizeof(BRIGHTNESS_THRESHOLDS) / 2; i++) {
+		uint16_t threshold = BRIGHTNESS_THRESHOLDS[i];
+
+		if (bucket < existing_bucket) {
+			boundary = BRIGHTNESS_THRESHOLDS[i + 1];
+		}
+
+		if (adc_value > threshold) {
+			bucket++;
+			if (bucket > existing_bucket) {
+				boundary = threshold;
+			}
+		}
+	}
+
+	if (bucket == existing_bucket) {
+		return existing;
+	} else if (bucket > existing_bucket) {
+		if (adc_value < boundary + BRIGHTNESS_THRESHOLD) {
+			return existing;
+		}
+	} else if (bucket < existing_bucket) {
+		if (adc_value > boundary - BRIGHTNESS_THRESHOLD) {
+			return existing;
+		}
+	}
+
+	return bucket * 51;
 }
 
 uint8_t debounce_button(enum Button button) {
