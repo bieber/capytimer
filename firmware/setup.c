@@ -28,14 +28,19 @@ void setup(uint8_t pixels[SCREEN_SIZE]) {
 	// Clear out all the DDR and PORT registers
 	DDR_SCREEN = 0;
 	DDR_BUZZ = 0;
+	DDR_START = 0;
+	DDR_STOP = 0;
+	DDR_DIAGNOSTIC = 0;
 	PULLUP_START = 0;
 	PULLUP_STOP = 0;
+	PULLUP_DIAGNOSTIC = 0;
 
 	// Set outputs and pullups on the input ports
 	DDR_SCREEN |= (1 << PIN_SCREEN);
 	DDR_BUZZ |= (1 << PIN_BUZZ);
 	PULLUP_START |= (1 << PIN_START);
 	PULLUP_STOP |= (1 << PIN_STOP);
+	PULLUP_DIAGNOSTIC |= (1 << PIN_DIAGNOSTIC);
 
 	// Use AVCC for ADC reference
     ADMUX = (1<<REFS0);

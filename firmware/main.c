@@ -76,6 +76,16 @@ int main(void) {
 		brightness = debounce_brightness(brightness, ADC_BRIGHTNESS);
 		uint8_t time_set = 0;
 
+		if (!(PORT_DIAGNOSTIC & (1 << PIN_DIAGNOSTIC))) {
+			// In diagnostic mode, we just display the raw value from
+			// the work minutes potentiometer.  We can use this to
+			// profile dials for the final product
+			set_number(pixels, read_adc(ADC_WORK_MINUTES), 255, 255, 255);
+			write_pixels(pixels, sizeof(pixels));
+			_delay_ms(250);
+			continue;
+		}
+
 		switch (state) {
 		case STARTUP:
 			new_work = debounce_time(

@@ -31,13 +31,20 @@
 #define PORT_BUZZ PORTB
 #define PIN_BUZZ PB4
 
+#define DDR_START DDRB
 #define PULLUP_START PORTB
 #define PORT_START PINB
 #define PIN_START PB2
 
+#define DDR_STOP DDRB
 #define PULLUP_STOP PORTB
 #define PORT_STOP PINB
 #define PIN_STOP PB3
+
+#define DDR_DIAGNOSTIC DDRC
+#define PULLUP_DIAGNOSTIC PORTC
+#define PORT_DIAGNOSTIC PINC
+#define PIN_DIAGNOSTIC PC7
 
 #define ADC_WORK_MINUTES 2
 #define ADC_WORK_SECONDS 0
@@ -53,7 +60,7 @@
 #define TIMER_1_ON ((1 << CS12) | (1 << CS10))
 #define TIMER_1_OFF (~((1 << CS12) | (1 << CS11) | (1 << CS10)))
 
-// Turn timer 2 on ith a 1024 prescaler
+// Turn timer 2 on with a 1024 prescaler
 #define TIMER_2_ON ((1 << CS22) | (1 << CS21) | (1 << CS00))
 #define TIMER_2_OFF (~((1 << CS22) | (1 << CS21) | (1 << CS20)))
 
