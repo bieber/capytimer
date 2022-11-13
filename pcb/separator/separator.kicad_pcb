@@ -83,7 +83,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory "bom")
+      (outputdirectory "gerbers/")
     )
   )
 
@@ -988,6 +988,12 @@
       (xy 136 59)
       (xy 143 52)
     ) (layer "Edge.Cuts") (width 0.1) (fill none) (tstamp 0879e65d-d220-4f46-b589-18b6f3258293))
+  (gr_text "2022-11-12" (at 143 121) (layer "B.SilkS") (tstamp ad4740b8-d9d8-4d20-9e21-b1414fdee22f)
+    (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+  )
+  (gr_text "v1" (at 143 123) (layer "B.SilkS") (tstamp ce6b9e79-37a8-4c25-ba89-6b98fc2d25f6)
+    (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+  )
 
   (segment (start 140.55 111.45) (end 141 111) (width 1) (layer "F.Cu") (net 1) (tstamp 7b8dedad-800f-4629-8ac6-d0bb12d1736c))
   (segment (start 140.55 60.45) (end 141 60) (width 1) (layer "F.Cu") (net 1) (tstamp a4e667bc-4839-4af8-85da-de4c6611c6d6))

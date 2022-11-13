@@ -83,7 +83,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory "bom/")
+      (outputdirectory "gerbers/")
     )
   )
 
@@ -2185,6 +2185,9 @@
       (xy 81 43)
       (xy 126 43)
     ) (layer "Edge.Cuts") (width 0.1) (fill none) (tstamp e4fa82ce-9215-4d73-9778-41ce1ac5807b))
+  (gr_text "v1 2022-11-12" (at 119 45) (layer "B.SilkS") (tstamp fff4a6c3-01ce-4b95-9397-49ca4e499a97)
+    (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+  )
 
   (segment (start 83 116) (end 82.45 116.55) (width 1) (layer "F.Cu") (net 1) (tstamp 046abdf3-ef40-4d46-aad5-20fccc06e037))
   (segment (start 123 124) (end 124.55 122.45) (width 1) (layer "F.Cu") (net 1) (tstamp 090eb3d6-f3d8-4028-af2b-0025feb5585a))
