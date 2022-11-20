@@ -80,7 +80,8 @@ int main(void) {
 			// In diagnostic mode, we just display the raw value from
 			// the work minutes potentiometer.  We can use this to
 			// profile dials for the final product
-			set_number(pixels, read_adc(ADC_WORK_MINUTES), 255, 255, 255);
+			//set_number(pixels, read_adc(ADC_WORK_MINUTES), 255, 255, 255);
+			set_number(pixels, PINC, 255, 255, 255);
 			write_pixels(pixels, sizeof(pixels));
 			_delay_ms(250);
 			continue;
@@ -121,7 +122,7 @@ int main(void) {
 				set_time(pixels, work_time, 0, brightness, 0);
 			}
 
-			if (debounce_button(BUTTON_START)) {
+			if (debounce_button(BUTTON_START) || debounce_button(RF_START)) {
 				start();
 			}
 			break;
@@ -134,17 +135,16 @@ int main(void) {
 			if (!time_set) {
 				set_time(pixels, running_time, brightness, 0, 0);
 			}
-			if (debounce_button(BUTTON_STOP)) {
+			if (debounce_button(BUTTON_STOP) || debounce_button(RF_STOP)) {
 				pause();
-				while (!(PORT_STOP & (1 << PIN_STOP)));
 			}
 			break;
 
 		case PAUSE:
-			if (debounce_button(BUTTON_START)) {
+			if (debounce_button(BUTTON_START) || debounce_button(RF_START)) {
 				resume();
 			}
-			if (debounce_button(BUTTON_STOP)) {
+			if (debounce_button(BUTTON_STOP) || debounce_button(RF_STOP)) {
 				reset();
 				set_time(pixels, work_time, 0, brightness, 0);
 			}

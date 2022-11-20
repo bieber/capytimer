@@ -30,8 +30,17 @@
 enum Button {
 	BUTTON_START,
 	BUTTON_STOP,
+	RF_START,
+	RF_STOP,
 
 	BUTTON_COUNT
+};
+
+enum RFButton {
+	RF_BUTTON_START,
+	RF_BUTTON_STOP,
+
+	RF_BUTTON_COUNT,
 };
 
 struct Time debounce_time(

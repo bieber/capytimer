@@ -13,3 +13,4 @@ program: firmware.hex
 
 fuse:
 	avrdude -c usbasp -p m324p -B1000 -U lfuse:w:0xF7:m
+	avrdude -c usbasp -p m324p -B1000 -U hfuse:w:0xD9:m

@@ -111,6 +111,7 @@ uint8_t debounce_brightness(uint8_t existing, uint8_t port) {
 uint8_t debounce_button(enum Button button) {
 	static uint8_t counts[BUTTON_COUNT];
 	static uint8_t last_values[BUTTON_COUNT];
+	static uint8_t sent[BUTTON_COUNT];
 
 	uint8_t value;
 	switch (button) {
@@ -121,9 +122,17 @@ uint8_t debounce_button(enum Button button) {
 	case BUTTON_STOP:
 		value = !(PORT_STOP & (1 << PIN_STOP));
 		break;
+
+	case RF_START:
+		value = PORT_RF_START & (1 << PIN_RF_START);
+		break;
+
+	case RF_STOP:
+		value = PORT_RF_STOP & (1 << PIN_RF_STOP);
+		break;
 	}
 
-	if (value == last_values[button]) {
+	if (value == last_values[button] && counts[button] <= BUTTON_THRESHOLD) {
 		counts[button]++;
 	} else {
 		counts[button] = 0;
@@ -131,7 +140,18 @@ uint8_t debounce_button(enum Button button) {
 	}
 
 	if (counts[button] > BUTTON_THRESHOLD) {
-		return last_values[button];
+		if (last_values[button]) {
+			if (sent[button]) {
+				return 0;
+			} else {
+				// We only want to send a button press once until it's
+				// gone back to zero
+				sent[button] = 1;
+				return 1;
+			}
+		} else {
+			sent[button] = 0;
+		}
 	}
 	return 0;
 }

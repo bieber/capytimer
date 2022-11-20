@@ -30,9 +30,13 @@ void setup(uint8_t pixels[SCREEN_SIZE]) {
 	DDR_BUZZ = 0;
 	DDR_START = 0;
 	DDR_STOP = 0;
+	DDR_RF_START = 0;
+	DDR_RF_STOP = 0;
 	DDR_DIAGNOSTIC = 0;
 	PULLUP_START = 0;
 	PULLUP_STOP = 0;
+	PULLUP_RF_START = 0;
+	PULLUP_RF_STOP = 0;
 	PULLUP_DIAGNOSTIC = 0;
 
 	// Set outputs and pullups on the input ports
