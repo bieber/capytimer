@@ -26,6 +26,7 @@ void setup(uint8_t pixels[SCREEN_SIZE]) {
 	}
 
 	// Clear out all the DDR and PORT registers
+	DDR_STATUS = 0;
 	DDR_SCREEN = 0;
 	DDR_BUZZ = 0;
 	DDR_START = 0;
@@ -40,6 +41,7 @@ void setup(uint8_t pixels[SCREEN_SIZE]) {
 	PULLUP_DIAGNOSTIC = 0;
 
 	// Set outputs and pullups on the input ports
+	DDR_STATUS |= (1 << PIN_STATUS);
 	DDR_SCREEN |= (1 << PIN_SCREEN);
 	DDR_BUZZ |= (1 << PIN_BUZZ);
 	PULLUP_START |= (1 << PIN_START);
@@ -71,4 +73,7 @@ void setup(uint8_t pixels[SCREEN_SIZE]) {
 
 	// Turn on interrupts
 	sei();
+
+	// Turn on status light on startup
+	PORT_STATUS |= (1 << PIN_STATUS);
 }
