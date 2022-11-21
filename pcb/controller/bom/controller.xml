@@ -2,7 +2,7 @@
 <export version="E">
   <design>
     <source>/home/bieber/projects/capytimer/pcb/controller/controller.kicad_sch</source>
-    <date>Tue 08 Nov 2022 09:56:45 AM PST</date>
+    <date>Mon 21 Nov 2022 10:50:39 AM EST</date>
     <tool>Eeschema 6.0.2+dfsg-1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -292,13 +292,13 @@
       <tstamps>7681789a-54ff-407c-927c-10c8a7b5fa79</tstamps>
     </comp>
     <comp ref="R1">
-      <value>470Ω</value>
-      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <value>1kΩ</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C17710</field>
+        <field name="LCSC">C21190</field>
       </fields>
       <libsource lib="Device" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17710"/>
+      <property name="LCSC" value="C21190"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="controller.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
@@ -357,56 +357,56 @@
       <tstamps>45c2f292-1fee-4b69-9a23-fee12b9148ea</tstamps>
     </comp>
     <comp ref="R6">
-      <value>470Ω</value>
-      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <value>1kΩ</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C17710</field>
+        <field name="LCSC">C21190</field>
       </fields>
       <libsource lib="Device" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17710"/>
+      <property name="LCSC" value="C21190"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="controller.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
-      <tstamps>9adaeaa2-9a90-4c48-b554-075117905012</tstamps>
+      <tstamps>2515592d-6550-47b7-aa06-fd7fd0ec82ae</tstamps>
     </comp>
     <comp ref="R7">
-      <value>470Ω</value>
-      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <value>1kΩ</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C17710</field>
+        <field name="LCSC">C21190</field>
       </fields>
       <libsource lib="Device" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17710"/>
+      <property name="LCSC" value="C21190"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="controller.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
-      <tstamps>3352e9eb-5ba7-4ce1-a6e5-125a48c39e4b</tstamps>
+      <tstamps>b52f1af8-299f-4ede-92cb-8b540c7f07ef</tstamps>
     </comp>
     <comp ref="R8">
-      <value>470Ω</value>
-      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <value>1kΩ</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C17710</field>
+        <field name="LCSC">C21190</field>
       </fields>
       <libsource lib="Device" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17710"/>
+      <property name="LCSC" value="C21190"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="controller.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
-      <tstamps>2f812da1-e031-4173-9c00-91e33beee6ca</tstamps>
+      <tstamps>6769f420-db96-4663-83af-700fffd703ad</tstamps>
     </comp>
     <comp ref="R9">
-      <value>470Ω</value>
-      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <value>1kΩ</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
       <fields>
-        <field name="LCSC">C17710</field>
+        <field name="LCSC">C21190</field>
       </fields>
       <libsource lib="Device" part="R" description="Resistor"/>
-      <property name="LCSC" value="C17710"/>
+      <property name="LCSC" value="C21190"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="controller.kicad_sch"/>
       <sheetpath names="/" tstamps="/"/>
-      <tstamps>4c090123-115c-4d08-bf2b-5f241a519cbb</tstamps>
+      <tstamps>cab90745-d567-4a37-b941-b5d1bb4dc2b9</tstamps>
     </comp>
     <comp ref="RVBRIGHT1">
       <value>R_Potentiometer</value>
@@ -767,6 +767,7 @@
       <node ref="JSTOP1" pin="1" pinfunction="Pin_1" pintype="passive"/>
       <node ref="JWM1" pin="1" pinfunction="Pin_1" pintype="passive"/>
       <node ref="JWS1" pin="1" pinfunction="Pin_1" pintype="passive"/>
+      <node ref="Q1" pin="2" pinfunction="S" pintype="passive"/>
       <node ref="R1" pin="2" pintype="passive"/>
       <node ref="R2" pin="2" pintype="passive"/>
       <node ref="R3" pin="2" pintype="passive"/>
@@ -777,7 +778,6 @@
       <node ref="R8" pin="2" pintype="passive"/>
       <node ref="R9" pin="2" pintype="passive"/>
       <node ref="RVBRIGHT1" pin="1" pinfunction="1" pintype="passive"/>
-      <node ref="RVVOL1" pin="3" pinfunction="3" pintype="passive"/>
       <node ref="U1" pin="21" pinfunction="GND" pintype="passive"/>
       <node ref="U1" pin="3" pinfunction="GND" pintype="power_in"/>
       <node ref="U1" pin="5" pinfunction="GND" pintype="passive"/>
@@ -864,7 +864,7 @@
     </net>
     <net code="20" name="Net-(JBUZZ1-Pad1)">
       <node ref="JBUZZ1" pin="1" pinfunction="Pin_1" pintype="passive"/>
-      <node ref="Q1" pin="3" pinfunction="D" pintype="passive"/>
+      <node ref="RVVOL1" pin="2" pinfunction="2" pintype="passive"/>
     </net>
     <net code="21" name="Net-(JDIAG1-Pad2)">
       <node ref="JDIAG1" pin="2" pinfunction="Pin_2" pintype="passive"/>
@@ -906,9 +906,9 @@
       <node ref="Q1" pin="1" pinfunction="G" pintype="input"/>
       <node ref="U1" pin="14" pinfunction="PB2" pintype="bidirectional"/>
     </net>
-    <net code="31" name="Net-(Q1-Pad2)">
-      <node ref="Q1" pin="2" pinfunction="S" pintype="passive"/>
-      <node ref="RVVOL1" pin="2" pinfunction="2" pintype="passive"/>
+    <net code="31" name="Net-(Q1-Pad3)">
+      <node ref="Q1" pin="3" pinfunction="D" pintype="passive"/>
+      <node ref="RVVOL1" pin="3" pinfunction="3" pintype="passive"/>
     </net>
     <net code="32" name="Net-(RVBRIGHT1-Pad2)">
       <node ref="RVBRIGHT1" pin="2" pinfunction="2" pintype="passive"/>

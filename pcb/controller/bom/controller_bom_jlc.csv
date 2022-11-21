@@ -4,7 +4,7 @@
 "22pF","C3,C4","C_0402_1005Metric","C1555"
 "LED","D1,D2,D3,D4,D5","LED_0805_2012Metric","C2297"
 "2N7002","Q1","SOT-23","C8545"
-"470Ω","R1,R6,R7,R8,R9","R_0805_2012Metric","C17710"
+"1kΩ","R1,R6,R7,R8,R9","R_0603_1608Metric","C21190"
 "10kΩ","R2,R3,R4,R5","R_0603_1608Metric","C25804"
 "ATmega328P-A","U1","TQFP-32_7x7mm_P0.8mm","C14877"
 "Crystal_GND24","Y1","Crystal_SMD_3225-4Pin_3.2x2.5mm","C431155"
