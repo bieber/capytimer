@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="0.90583672"
-     inkscape:cx="446.54847"
-     inkscape:cy="611.03727"
+     inkscape:zoom="0.64052329"
+     inkscape:cx="411.38239"
+     inkscape:cy="417.62728"
      inkscape:window-width="2486"
      inkscape:window-height="1376"
      inkscape:window-x="74"
@@ -36,13 +36,23 @@
      inkscape:snap-object-midpoints="true"
      inkscape:object-nodes="true"
      inkscape:snap-global="true"
-     inkscape:snap-grids="true">
+     inkscape:snap-grids="false"
+     showguides="true"
+     inkscape:guide-bbox="true">
     <inkscape:grid
        type="xygrid"
        id="grid2110"
        units="mm"
        spacingx="9.9999999"
        spacingy="9.9999999" />
+    <sodipodi:guide
+       position="4,244.00032"
+       orientation="1,0"
+       id="guide971" />
+    <sodipodi:guide
+       position="16,256.00031"
+       orientation="0,-1"
+       id="guide973" />
   </sodipodi:namedview>
   <defs
      id="defs834" />
@@ -350,7 +360,7 @@
       </g>
       <g
          aria-label="WORK"
-         transform="matrix(1,0,0,-1,1.51555,0.5674)"
+         transform="matrix(1,0,0,-1,1.51555,0.5673995)"
          id="text14787"
          style="font-size:20px;line-height:60.4%;font-family:Impact;-inkscape-font-specification:'Impact, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.264583px">
         <path
@@ -376,7 +386,7 @@
          style="font-size:3px;line-height:60.4%;font-family:FreeMono;-inkscape-font-specification:FreeMono;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:none;stroke:#000000;stroke-width:0.264583px" />
       <g
          aria-label="REST"
-         transform="matrix(1,0,0,-1,2.4133,-0.7936488)"
+         transform="matrix(1,0,0,-1,2.4133,-0.05634377)"
          id="text29781"
          style="font-size:20px;line-height:60.4%;font-family:Impact;-inkscape-font-specification:'Impact, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.264583px">
         <path
@@ -406,7 +416,7 @@
          d="m -84.621002,25.972015 a -3.5,3.5 0 0 0 -3.5,-3.5 -3.5,3.5 0 0 0 -3.5,3.5 -3.5,3.5 0 0 0 3.5,3.5 -3.5,3.5 0 0 0 3.5,-3.5 z" />
       <g
          aria-label=":"
-         transform="matrix(1,0,0,-1,0.59143,-0.9949954)"
+         transform="matrix(1,0,0,-1,0.59143,-1.732302)"
          id="text39966"
          style="font-size:20px;line-height:60.4%;font-family:Impact;-inkscape-font-specification:'Impact, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-opacity:1">
         <path
@@ -424,7 +434,7 @@
          d="m -84.621002,-3.2906798 a -3.5,3.4999999 0 0 0 -3.5,-3.5000001 -3.5,3.4999999 0 0 0 -3.5,3.5000001 -3.5,3.4999999 0 0 0 3.5,3.49999995 -3.5,3.4999999 0 0 0 3.5,-3.49999995 z" />
       <g
          aria-label=":"
-         transform="matrix(1,0,0,-1,0.36699,-0.0921622)"
+         transform="matrix(1,0,0,-1,0.36699,-0.09216397)"
          id="text39966-8"
          style="font-size:20px;line-height:60.4%;font-family:Impact;-inkscape-font-specification:'Impact, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-opacity:1">
         <path
@@ -746,6 +756,10 @@
           </g>
         </g>
       </g>
+      <path
+         style="fill:#ff0000;fill-rule:evenodd;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+         d="m -224.121,182.70931 v 2.34419 l 1.20436,-2.34419 z"
+         id="path1008" />
     </g>
   </g>
 </svg>
